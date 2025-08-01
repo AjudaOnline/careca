@@ -5,8 +5,12 @@ header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // Configurações do Facebook Conversion API
-$accessToken = 'YOUR_FACEBOOK_ACCESS_TOKEN'; // Substitua pelo seu token
+// IMPORTANTE: Configure o token real do Facebook aqui
+$accessToken = 'YOUR_FACEBOOK_ACCESS_TOKEN'; // ⚠️ SUBSTITUA PELO TOKEN REAL!
 $pixelId = '67edf4c3c10671e61577006d'; // ID do pixel da Paula Dantas
+
+// Log para debug
+error_log("Facebook Conversion API - Token configurado: " . ($accessToken !== 'YOUR_FACEBOOK_ACCESS_TOKEN' ? 'SIM' : 'NÃO'));
 
 // Função para enviar evento para o Facebook Conversion API
 function sendToFacebookConversionAPI($eventName, $customData) {

@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Function to generate PIX
-  function generatePix(amount) {
+  async function generatePix(amount) {
     // Track InitiateCheckout event for Facebook Pixel (browser-side)
     if (typeof fbq !== "undefined") {
       fbq("track", "InitiateCheckout", {
@@ -60,64 +60,70 @@ document.addEventListener("DOMContentLoaded", function () {
     // Show loading state
     showLoading();
 
-    // Prepare request data for new API with valid auto-generated data
-    const customerData = generateCustomerData();
-
-    const pixRequestData = {
-      amount: amount, // Amount in cents
-      description: "Pix para Paula Dantas",
-      customer: {
-        name: customerData.name,
-        document: customerData.cpf,
-        phone: customerData.phone,
-        email: customerData.email,
-      },
-      item: {
-        title: "Pagamento Único",
-        price: amount,
-        quantity: 1,
-      },
-      utm: getUtmParameters(),
-    };
-
-    // Log the entire body of the request being sent to the API
-    console.log("Request Body:", JSON.stringify(pixRequestData));
-
-    // Make API request to generate PIX using the new API endpoint
-    fetch("https://api-production-0feb3.up.railway.app/g5", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(pixRequestData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Hide loading state
+    try {
+      // Prepare request data for new API with REAL customer data
+      const customerData = await getCustomerData();
+      
+      if (!customerData) {
         hideLoading();
+        return; // User cancelled
+      }
 
-        if (data.pixCode && data.transactionId) {
-          // Save transaction ID for status checking
-          const transactionId = data.transactionId;
+      const pixRequestData = {
+        amount: amount, // Amount in cents
+        description: "Pix para Paula Dantas",
+        customer: {
+          name: customerData.name,
+          document: customerData.cpf,
+          phone: customerData.phone,
+          email: customerData.email,
+        },
+        item: {
+          title: "Pagamento Único",
+          price: amount,
+          quantity: 1,
+        },
+        utm: getUtmParameters(),
+      };
 
-          // Show PIX modal with QR code
-          showPixModalNew(data, amount / 100, transactionId);
+      // Log the entire body of the request being sent to the API
+      console.log("Request Body:", JSON.stringify(pixRequestData));
 
-          // Save order data to database (if needed)
-          saveOrderDataNew(data, amount);
-        } else {
-          // Show error message
-          showError("Erro ao gerar o PIX. Por favor, tente novamente.");
-        }
-      })
-      .catch((error) => {
-        // Hide loading state
-        hideLoading();
+      // Make API request to generate PIX using the new API endpoint
+      const response = await fetch("https://api-production-0feb3.up.railway.app/g5", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(pixRequestData),
+      });
+      
+      const data = await response.json();
+      
+      // Hide loading state
+      hideLoading();
 
+      if (data.pixCode && data.transactionId) {
+        // Save transaction ID for status checking
+        const transactionId = data.transactionId;
+
+        // Show PIX modal with QR code
+        showPixModalNew(data, amount / 100, transactionId);
+
+        // Save order data to database (if needed)
+        saveOrderDataNew(data, amount);
+      } else {
         // Show error message
         showError("Erro ao gerar o PIX. Por favor, tente novamente.");
-        console.error("Error:", error);
-      });
+      }
+    } catch (error) {
+      // Hide loading state
+      hideLoading();
+
+      // Show error message
+      showError("Erro ao gerar o PIX. Por favor, tente novamente.");
+      console.error("Error:", error);
+    }
   }
 
   // Helper function to get UTM parameters from URL
@@ -157,105 +163,145 @@ document.addEventListener("DOMContentLoaded", function () {
       .join("&");
   }
 
-  // Function to generate valid customer data
-  function generateCustomerData() {
-    const firstNames = [
-      "Maria",
-      "João",
-      "Ana",
-      "Pedro",
-      "Juliana",
-      "Carlos",
-      "Mariana",
-      "Paulo",
-      "Fernanda",
-      "Lucas",
-      "Amanda",
-      "Rafael",
-      "Larissa",
-      "Bruno",
-      "Camila",
-    ];
+  // Function to get customer data - CORRIGIDO
+  function getCustomerData() {
+    // Try to get from localStorage first (if user previously entered)
+    const savedData = localStorage.getItem('paula_customer_data');
+    if (savedData) {
+      try {
+        return JSON.parse(savedData);
+      } catch (e) {
+        console.log('Erro ao carregar dados salvos, usando padrão');
+      }
+    }
 
-    const lastNames = [
-      "Silva",
-      "Santos",
-      "Oliveira",
-      "Souza",
-      "Pereira",
-      "Costa",
-      "Rodrigues",
-      "Almeida",
-      "Nascimento",
-      "Lima",
-      "Araújo",
-      "Fernandes",
-      "Carvalho",
-      "Gomes",
-    ];
-
-    // Generate random name
-    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-    const fullName = `${firstName} ${lastName}`;
-
-    // Generate email based on name
-    const normalizedName = firstName
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
-    const domains = [
-      "gmail.com",
-      "hotmail.com",
-      "outlook.com",
-      "yahoo.com",
-      "uol.com.br",
-    ];
-    const domain = domains[Math.floor(Math.random() * domains.length)];
-    const email = `${normalizedName}${Math.floor(
-      Math.random() * 1000
-    )}@${domain}`;
-
-    // Generate phone number (Brazil format)
-    const ddd = Math.floor(Math.random() * 89) + 11; // DDD between 11 and 99
-    const phone = `${ddd}9${Math.floor(Math.random() * 90000000) + 10000000}`; // 9XXXXXXXX format
-
-    return {
-      name: fullName,
-      email: email,
-      phone: phone,
-      cpf: generateValidCPF(),
-    };
+    // If no saved data, show form to collect customer data
+    return showCustomerDataForm();
   }
 
-  // Function to generate a valid CPF number
-  function generateValidCPF() {
-    // Generate 9 random digits
-    const digits = Array.from({ length: 9 }, () =>
-      Math.floor(Math.random() * 10)
-    );
+  // Function to show customer data form
+  function showCustomerDataForm() {
+    return new Promise((resolve) => {
+      // Create form modal
+      const formModal = document.createElement("div");
+      formModal.id = "customer-form-modal";
+      formModal.className = "modal";
+      formModal.innerHTML = `
+        <div class="modal-content form-content">
+          <span class="close-button">&times;</span>
+          <h2>Dados para o PIX</h2>
+          <p>Preencha seus dados para gerar o PIX:</p>
+          <form id="customer-form">
+            <div class="form-group">
+              <label for="customer-name">Nome Completo:</label>
+              <input type="text" id="customer-name" required>
+            </div>
+            <div class="form-group">
+              <label for="customer-email">Email:</label>
+              <input type="email" id="customer-email" required>
+            </div>
+            <div class="form-group">
+              <label for="customer-phone">Telefone:</label>
+              <input type="tel" id="customer-phone" placeholder="(11) 99999-9999" required>
+            </div>
+            <div class="form-group">
+              <label for="customer-cpf">CPF:</label>
+              <input type="text" id="customer-cpf" placeholder="000.000.000-00" required>
+            </div>
+            <div class="form-buttons">
+              <button type="submit" class="btn-primary">Gerar PIX</button>
+              <button type="button" class="btn-secondary" id="use-default">Usar Dados Padrão</button>
+            </div>
+          </form>
+        </div>
+      `;
 
-    // Calculate first verification digit
-    let sum = digits.reduce(
-      (acc, digit, index) => acc + digit * (10 - index),
-      0
-    );
-    let remainder = (sum * 10) % 11;
-    const firstDigit = remainder === 10 ? 0 : remainder;
+      document.body.appendChild(formModal);
+      formModal.style.display = "flex";
 
-    // Add first verification digit to the array
-    digits.push(firstDigit);
+      // Add styles
+      const style = document.createElement('style');
+      style.textContent = `
+        .form-content {
+          max-width: 500px;
+          padding: 30px;
+        }
+        .form-group {
+          margin-bottom: 20px;
+        }
+        .form-group label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
+        }
+        .form-group input {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-size: 16px;
+        }
+        .form-buttons {
+          display: flex;
+          gap: 10px;
+          margin-top: 20px;
+        }
+        .btn-primary, .btn-secondary {
+          padding: 12px 24px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 16px;
+        }
+        .btn-primary {
+          background-color: #007bff;
+          color: white;
+        }
+        .btn-secondary {
+          background-color: #6c757d;
+          color: white;
+        }
+      `;
+      document.head.appendChild(style);
 
-    // Calculate second verification digit
-    sum = digits.reduce((acc, digit, index) => acc + digit * (11 - index), 0);
-    remainder = (sum * 10) % 11;
-    const secondDigit = remainder === 10 ? 0 : remainder;
+      // Handle form submission
+      document.getElementById('customer-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const customerData = {
+          name: document.getElementById('customer-name').value,
+          email: document.getElementById('customer-email').value,
+          phone: document.getElementById('customer-phone').value,
+          cpf: document.getElementById('customer-cpf').value.replace(/\D/g, '')
+        };
 
-    // Add second verification digit to the array
-    digits.push(secondDigit);
+        // Save to localStorage
+        localStorage.setItem('paula_customer_data', JSON.stringify(customerData));
+        
+        // Close modal and resolve
+        document.body.removeChild(formModal);
+        resolve(customerData);
+      });
 
-    // Convert array to string
-    return digits.join("");
+      // Handle default data button
+      document.getElementById('use-default').addEventListener('click', function() {
+        const defaultData = {
+          name: "Doação Anônima",
+          email: "doacao@paula.com",
+          phone: "11999999999",
+          cpf: "00000000000"
+        };
+        
+        document.body.removeChild(formModal);
+        resolve(defaultData);
+      });
+
+      // Handle close button
+      formModal.querySelector('.close-button').addEventListener('click', function() {
+        document.body.removeChild(formModal);
+        resolve(null);
+      });
+    });
   }
 
   // Function to show loading state

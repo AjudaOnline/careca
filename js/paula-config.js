@@ -99,42 +99,44 @@ function addUtmToLink(link) {
   }
 }
 
-// Função para rastrear cliques nos botões de doação
-function trackDonationClick(amount, link) {
-  console.log(`🎯 [Paula] Clique rastreado: R$ ${amount}`);
-  
-  // Rastreamento Facebook Pixel
-  if (PAULA_CONFIG.tracking.enableFacebookPixel && typeof fbq !== "undefined") {
-    fbq("track", "InitiateCheckout", {
-      currency: "BRL",
-      value: amount,
-      content_type: "donation",
-      content_name: `Doação Paula Dantas - R$ ${amount}`,
-      content_category: "carequinha"
-    });
+  // Função para rastrear cliques nos botões de doação
+  function trackDonationClick(amount, link) {
+    console.log(`🎯 [Paula] Clique rastreado: R$ ${amount}`);
+    
+    // Rastreamento Facebook Pixel
+    if (PAULA_CONFIG.tracking.enableFacebookPixel && typeof fbq !== "undefined") {
+      fbq("track", "InitiateCheckout", {
+        currency: "BRL",
+        value: amount,
+        content_type: "donation",
+        content_name: `Doação Paula Dantas - R$ ${amount}`,
+        content_category: "carequinha",
+        payment_method: "checkout"
+      });
+    }
+    
+    // Rastreamento via Conversion API
+    if (PAULA_CONFIG.tracking.enableConversionAPI) {
+      fetch("./api/fb_conversion_api.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          eventName: "InitiateCheckout",
+          customData: {
+            value: amount,
+            currency: "BRL",
+            content_type: "donation",
+            content_name: `Doação Paula Dantas - R$ ${amount}`,
+            content_category: "carequinha",
+            payment_method: "checkout"
+          },
+        }),
+      })
+      .then((response) => response.json())
+      .then((data) => console.log("✅ [Paula] Conversion API InitiateCheckout tracked:", data))
+      .catch((error) => console.error("❌ [Paula] Conversion API error:", error));
+    }
   }
-  
-  // Rastreamento via Conversion API
-  if (PAULA_CONFIG.tracking.enableConversionAPI) {
-    fetch("./api/fb_conversion_api.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        eventName: "InitiateCheckout",
-        customData: {
-          value: amount,
-          currency: "BRL",
-          content_type: "donation",
-          content_name: `Doação Paula Dantas - R$ ${amount}`,
-          content_category: "carequinha"
-        },
-      }),
-    })
-    .then((response) => response.json())
-    .then((data) => console.log("✅ [Paula] Conversion API InitiateCheckout tracked:", data))
-    .catch((error) => console.error("❌ [Paula] Conversion API error:", error));
-  }
-}
 
 // Função para inicializar o rastreamento UTM
 function initUtmTracking() {
