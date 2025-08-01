@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Obrigado pela sua doação! Sua ajuda faz toda a diferença. Considere doar um pouco mais e transforme completamente o tratamento.">
+    <meta name="keywords" content="obrigado, doação, tratamento, cirurgia, ajuda, solidariedade">
+    <meta property="og:title" content="Obrigado pela Sua Doação! 💖 - Sua Ajuda Faz a Diferença" />
+    <meta property="og:description" content="Sua doação é preciosa! Considere doar um pouco mais e transforme completamente o tratamento." />
+    <meta property="og:image" content="../images/logo.webp" />
+    <meta property="og:url" content="" />
+    <title>Obrigado pela Sua Doação! 💖 - Sua Ajuda Faz a Diferença</title>
+    <link rel="icon" href="images/favi.webp" type="image/png">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .urgent-cta {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+            border: 3px solid #ffd700;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .urgent-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .urgent-cta h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .urgent-cta p {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        
+        .impact-highlight {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+        }
+        
+        .impact-highlight h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .donation-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .donation-option {
+            background: white;
+            border: 2px solid #00b894;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .donation-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.3);
+            border-color: #00a085;
+        }
+        
+        .donation-option .amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00b894;
+            margin-bottom: 10px;
+        }
+        
+        .donation-option .impact {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .donation-option .btn {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .donation-option .btn:hover {
+            background: linear-gradient(135deg, #00a085, #00b894);
+            transform: scale(1.05);
+        }
+        
+        .testimonial-urgent {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 5px solid #ff6b6b;
+        }
+        
+        .testimonial-urgent p {
+            font-style: italic;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .testimonial-urgent .author {
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+        
+        .progress-urgent {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .progress-urgent h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .progress-bar-urgent {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 20px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill-urgent {
+            background: linear-gradient(90deg, #ffd700, #ffed4e);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease;
+            position: relative;
+        }
+        
+        .progress-fill-urgent::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @media (max-width: 768px) {
+            .urgent-cta h2 {
+                font-size: 24px;
+            }
+            
+            .urgent-cta p {
+                font-size: 16px;
+            }
+            
+            .donation-options {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 10px;
+            }
+            
+            .donation-option .amount {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Hearts Animation -->
+    <div class="floating-hearts" id="floating-hearts"></div>
+    
+    <div class="container">
+        <div class="logo">
+            <img src="images/ajudelogo.png" alt="Logo Ajude" />
+        </div>
+        
+        <div class="thank-you-card">
+            <div class="success-icon">💖</div>
+            <h1>Obrigado pela Sua Doação! 💖</h1>
+            <p class="subtitle">Sua doação é preciosa e faz toda a diferença na vida de quem precisa!</p>
+        </div>
+        
+        <!-- URGENT CTA SECTION -->
+        <div class="urgent-cta">
+            <h2>🚨 UMA PEQUENA DIFERENÇA PODE MUDAR TUDO! 🚨</h2>
+            <p><strong>Você sabia que apenas R$ 20, R$ 50 ou R$ 100 a mais podem transformar completamente o tratamento?</strong></p>
+            <p>Essa diferença pode significar:</p>
+            <ul style="text-align: left; margin: 20px 0; color: #fff;">
+                <li>✨ Cirurgia com o melhor especialista do Brasil</li>
+                <li>✨ Tratamento odontológico completo e especializado</li>
+                <li>✨ Fisioterapia intensiva para recuperação total</li>
+                <li>✨ Acompanhamento psicológico por 1 ano completo</li>
+                <li>✨ Medicamentos de alta qualidade para cicatrização</li>
+            </ul>
+        </div>
+        
+        <!-- IMPACT HIGHLIGHT -->
+        <div class="impact-highlight">
+            <h3>🌟 O IMPACTO DA SUA DOAÇÃO EXTRA</h3>
+            <p><strong>R$ 20 a mais</strong> = 1 consulta com especialista em reconstrução facial</p>
+            <p><strong>R$ 50 a mais</strong> = 1 semana de medicamentos essenciais</p>
+            <p><strong>R$ 100 a mais</strong> = 1 mês de fisioterapia especializada</p>
+        </div>
+        
+        <!-- DONATION OPTIONS -->
+        <div class="donation-options" id="donation-options">
+            <div class="donation-option" onclick="donateExtra(20)">
+                <div class="amount">R$ 20</div>
+                <div class="impact">+ 1 consulta especializada</div>
+                <button class="btn">DOAR EXTRA</button>
+            </div>
+            <div class="donation-option" onclick="donateExtra(50)">
+                <div class="amount">R$ 50</div>
+                <div class="impact">+ 1 semana de medicamentos</div>
+                <button class="btn">DOAR EXTRA</button>
+            </div>
+            <div class="donation-option" onclick="donateExtra(100)">
+                <div class="amount">R$ 100</div>
+                <div class="impact">+ 1 mês de fisioterapia</div>
+                <button class="btn">DOAR EXTRA</button>
+                </div>
+            <div class="donation-option" onclick="donateExtra(200)">
+                <div class="amount">R$ 200</div>
+                <div class="impact">+ 2 meses de tratamento</div>
+                <button class="btn">DOAR EXTRA</button>
+            </div>
+        </div>
+        
+        <!-- PROGRESS SECTION -->
+        <div class="progress-urgent">
+            <h3>📊 PROGRESSO DA CAMPANHA</h3>
+            <div class="progress-bar-urgent">
+                <div class="progress-fill-urgent" style="width: 20.8%"></div>
+            </div>
+            <div class="progress-values">
+                <span>R$ 18.750,00</span>
+                <span>R$ 90.000,00</span>
+            </div>
+            <p><strong>20.8% da meta alcançada!</strong></p>
+            <p style="margin-top: 15px; font-size: 16px;">Cada real a mais aproxima da cura completa!</p>
+        </div>
+        
+        <!-- TESTIMONIAL -->
+        <div class="testimonial-urgent">
+            <p>"Quando vejo pessoas como você se mobilizando para ajudar, eu vejo esperança. Mas quando vejo alguém que já doou e ainda assim quer doar um pouco mais... isso me mostra que milagres existem. Essa diferença pode ser o que falta para ter o tratamento completo que merece."</p>
+            <div class="author">- Organizador da Campanha</div>
+        </div>
+        
+        <!-- SHARE SECTION -->
+        <div class="share-section">
+            <h3 class="share-title">📱 Compartilhe Esta Campanha</h3>
+            <p style="color: #666; margin-bottom: 20px;">
+                Ajude a alcançar mais pessoas! Compartilhe esta campanha e multiplique a esperança.
+            </p>
+            
+            <div class="share-buttons">
+                <button class="share-btn whatsapp" onclick="shareWhatsApp()">
+                    📱 WhatsApp
+                </button>
+                <button class="share-btn facebook" onclick="shareFacebook()">
+                    📘 Facebook
+                </button>
+                <button class="share-btn instagram" onclick="shareInstagram()">
+                    📷 Instagram
+                </button>
+                <button class="share-btn telegram" onclick="shareTelegram()">
+                    📬 Telegram
+                </button>
+                <button class="share-btn copy-link" onclick="copyLink()">
+                    📋 Copiar Link
+                </button>
+            </div>
+        </div>
+        
+        <!-- FINAL CTA -->
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="#donation-options" class="donation-cta" onclick="scrollToDonationOptions()">
+                💝 FAZER NOVA DOAÇÃO
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // Floating Hearts Animation
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '💖';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            heart.style.opacity = Math.random();
+            
+            document.getElementById('floating-hearts').appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 6000);
+        }
+        
+        setInterval(createHeart, 300);
+        
+        // Scroll to donation options function
+        function scrollToDonationOptions() {
+            const element = document.getElementById('donation-options');
+            if (element) {
+                element.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }
+        
+        // Donate Extra Function
+        function donateExtra(amount) {
+            // Track the extra donation event
+            if (typeof fbq !== "undefined") {
+                fbq("track", "InitiateCheckout", {
+                    currency: "BRL",
+                    value: amount,
+                    content_type: "extra_donation",
+                });
+            }
+            
+            // Redirect to specific checkout links based on amount
+            let checkoutUrl;
+            switch(amount) {
+                case 20:
+                    checkoutUrl = "https://www.pay-pagamentos.link/checkout/77b7689f-cc6c-40fb-b96c-2e110dae9aef";
+                    break;
+                case 50:
+                    checkoutUrl = "https://www.pay-pagamentos.link/checkout/887b57a9-0846-4d9f-ab8e-0348aa259323";
+                    break;
+                case 100:
+                    checkoutUrl = "https://www.pay-pagamentos.link/checkout/351a9e1f-8f6a-4921-a555-ee7b54e1bed1";
+                    break;
+                case 200:
+                    checkoutUrl = "https://www.pay-pagamentos.link/checkout/2f149a8c-351b-4138-b15d-0d9ce23711cf";
+                    break;
+                default:
+                    checkoutUrl = "/index.html#donation-section";
+            }
+            
+            // Add UTM parameters if available
+            const currentParams = new URLSearchParams(window.location.search);
+            const utmParams = {};
+            ['utm_source', 'utm_campaign', 'utm_medium', 'utm_content', 'utm_term', 'xcod'].forEach(param => {
+                const value = currentParams.get(param);
+                if (value) utmParams[param] = value;
+            });
+            
+            if (Object.keys(utmParams).length > 0 && checkoutUrl.includes('pay-pagamentos.link')) {
+                const url = new URL(checkoutUrl);
+                const linkParams = new URLSearchParams(url.search);
+                
+                for (const key in utmParams) {
+                    linkParams.set(key, utmParams[key]);
+                }
+                
+                url.search = linkParams.toString();
+                checkoutUrl = url.toString();
+            }
+            
+            window.location.href = checkoutUrl;
+            
+            // Show a thank you message
+            showToast(`Obrigado por considerar doar R$ ${amount} a mais! 💖`, 'success');
+        }
+        
+        // Share Functions
+        function shareWhatsApp() {
+            const text = "💖 Ajude esta causa importante! Sua doação pode fazer toda a diferença na vida de quem precisa. 💝";
+            const url = window.location.origin + "/juliana/index.html";
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+        
+        function shareFacebook() {
+            const url = window.location.origin + "/juliana/index.html";
+            const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+            window.open(facebookUrl, '_blank');
+        }
+        
+        function shareInstagram() {
+            const text = "💖 Ajude esta causa importante! Sua doação pode fazer toda a diferença na vida de quem precisa. 💝";
+            showToast('Copie o texto e compartilhe no Instagram!', 'success');
+            copyToClipboard(text + " " + window.location.origin + "/juliana/index.html");
+        }
+        
+        function shareTelegram() {
+            const text = "💖 Ajude esta causa importante! Sua doação pode fazer toda a diferença na vida de quem precisa. 💝";
+            const url = window.location.origin + "/juliana/index.html";
+            const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+            window.open(telegramUrl, '_blank');
+        }
+        
+        function copyLink() {
+            const url = window.location.origin + "/juliana/index.html";
+            copyToClipboard(url);
+            showToast('Link copiado com sucesso!', 'success');
+        }
+        
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text);
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            }
+        }
+        
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+        
+        // Preserve UTM parameters in links
+        function preserveUtmParams() {
+            const currentParams = new URLSearchParams(window.location.search);
+            const utmParams = {};
+            
+            ['utm_source', 'utm_campaign', 'utm_medium', 'utm_content', 'utm_term', 'xcod'].forEach(param => {
+                const value = currentParams.get(param);
+                if (value) utmParams[param] = value;
+            });
+            
+            if (Object.keys(utmParams).length > 0) {
+                const links = document.querySelectorAll('a[href*="index.html"]');
+                links.forEach(link => {
+                    const url = new URL(link.href, window.location.origin);
+                    const linkParams = new URLSearchParams(url.search);
+                    
+                    for (const key in utmParams) {
+                        linkParams.set(key, utmParams[key]);
+                    }
+                    
+                    url.search = linkParams.toString();
+                    link.href = url.toString();
+                });
+            }
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            preserveUtmParams();
+        });
+    </script>
+</body>
+</html> 
