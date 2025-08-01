@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste UTM Simples</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-link { display: block; margin: 10px 0; padding: 10px; background: #f0f0f0; }
+        .debug { background: #e3f2fd; padding: 15px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>Teste UTM Simples</h1>
+    
+    <div class="debug">
+        <h3>Debug Info:</h3>
+        <div id="debug"></div>
+    </div>
+
+    <h2>Links de Teste:</h2>
+    
+    <a href="https://checkout.geterectus.site/7vJOGYjDyqgKXda" class="test-link">
+        R$ 700 - Teste
+    </a>
+    
+    <a href="https://checkout.geterectus.site/yOeXZKYEdqgAQap" class="test-link">
+        R$ 1000 - Teste
+    </a>
+    
+    <a href="https://www.pay-pagamentos.link/checkout/39bd8e84-0c3d-4917-954f-b35801d8d829" class="test-link">
+        R$ 30 - Teste
+    </a>
+
+    <script src="utm-script.js"></script>
+    <script>
+        function updateDebug() {
+            const debug = document.getElementById('debug');
+            const urlParams = new URLSearchParams(window.location.search);
+            const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'xcod'];
+            
+            let html = '<h4>URL atual:</h4>';
+            html += '<p>' + window.location.href + '</p>';
+            
+            html += '<h4>Parâmetros UTM:</h4>';
+            let found = false;
+            utmParams.forEach(param => {
+                const value = urlParams.get(param);
+                if (value) {
+                    html += '<p><strong>' + param + ':</strong> ' + value + '</p>';
+                    found = true;
+                }
+            });
+            
+            if (!found) {
+                html += '<p>❌ Nenhum parâmetro UTM encontrado</p>';
+            } else {
+                html += '<p>✅ Parâmetros UTM encontrados!</p>';
+            }
+            
+            debug.innerHTML = html;
+        }
+
+        function checkLinks() {
+            setTimeout(() => {
+                console.log('=== VERIFICAÇÃO DE LINKS ===');
+                const links = document.querySelectorAll('a[href*="checkout.geterectus.site"], a[href*="pay-pagamentos.link"]');
+                console.log('Links encontrados:', links.length);
+                
+                links.forEach((link, index) => {
+                    console.log(`Link ${index + 1}:`, link.href);
+                });
+                
+                if (window.UTMHelper) {
+                    console.log('UTMHelper OK');
+                    const params = window.UTMHelper.getUTMParams();
+                    console.log('Parâmetros:', params);
+                } else {
+                    console.log('UTMHelper FALHOU');
+                }
+            }, 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDebug();
+            checkLinks();
+        });
+    </script>
+</body>
+</html> 

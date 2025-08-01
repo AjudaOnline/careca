@@ -1,0 +1,48 @@
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Arquivos de IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Arquivos temporários
+*.tmp
+*.temp
+temp/
+
+# Arquivos de backup
+*.bak
+*.backup
+
+# Arquivos de configuração local
+.env
+config.local.php
+
+# Arquivos de cache
+cache/
+*.cache
+
+# Arquivos de upload
+uploads/
+user_uploads/
+
+# Arquivos de sessão
+sessions/
+
+# Arquivos de banco de dados
+*.sql
+*.db
+*.sqlite
+
+# Arquivos de configuração do servidor
+.htaccess.local
+web.config.local 

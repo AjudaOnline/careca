@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Kaleb - Sistema de Doações</title>
+    <style>
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            padding: 20px; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .link {
+            display: block;
+            margin: 10px 0;
+            padding: 15px;
+            background: #09c5a7;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .link:hover {
+            background: #07a895;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        
+        .progress-test {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 20px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        .progress-bar-test {
+            background: #09c5a7;
+            height: 100%;
+            width: 12%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .toast-test {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #ffc100;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            max-width: 300px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            z-index: 9999;
+            font-weight: 600;
+        }
+        .toast-test.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /* Estilos para o grid de doações */
+        .donation-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .donation-option {
+            background: #09c5a7;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            padding: 20px 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 80px;
+            box-shadow: 0 4px 8px rgba(9, 197, 167, 0.2);
+        }
+
+        .donation-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(9, 197, 167, 0.3);
+            background: #07a895;
+        }
+
+        .donation-option.featured {
+            border: 2px solid #ffc100;
+            background: linear-gradient(135deg, #09c5a7 0%, #07a895 100%);
+            position: relative;
+        }
+
+        .donation-badge {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffc100;
+            color: #333;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 12px;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .donation-amount {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .donation-value {
+            font-size: 12px;
+            opacity: 0.9;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste Completo - Site do Kaleb</h1>
+    
+    <div class="test-section">
+        <h2>📋 Como Testar</h2>
+        <p>Adicione parâmetros UTM à URL para testar o tracking:</p>
+        <code>teste-kaleb.html?utm_source=facebook&utm_medium=cpc&utm_campaign=teste&utm_content=banner&utm_term=doacao&xcod=123</code>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 Status do Sistema</h2>
+        <div id="status">Verificando...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>💰 Barra de Progresso</h2>
+        <div class="progress-test">
+            <div class="progress-bar-test" id="progress-bar">12%</div>
+        </div>
+        <p>Valor atual: <strong id="current-value">R$ 25.300,00</strong> / Meta: <strong>R$ 200.000,00</strong></p>
+        <button onclick="testarProgresso()" style="background: #09c5a7; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Testar Atualização</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🔔 Teste de Notificações</h2>
+        <button onclick="testarNotificacao()" style="background: #ffc100; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px;">Mostrar Notificação</button>
+        <button onclick="testarNotificacaoDoador()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px;">Notificação Doador</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Links de Teste</h2>
+        <p>Estes links devem ter os parâmetros UTM adicionados automaticamente:</p>
+        
+        <div class="donation-grid">
+            <a href="https://www.pay-pagamentos.link/checkout/39bd8e84-0c3d-4917-954f-b35801d8d829" class="donation-option">
+                <div class="donation-amount">R$ 30</div>
+                <div class="donation-value">Doação Única</div>
+            </a>
+            <a href="https://www.pay-pagamentos.link/checkout/273d559b-cc84-48cc-b3bf-1c28d65e0800" class="donation-option featured">
+                <div class="donation-badge">⭐ MAIS ESCOLHIDO</div>
+                <div class="donation-amount">R$ 50</div>
+                <div class="donation-value">VALE R$ 100,00</div>
+            </a>
+            <a href="https://www.pay-pagamentos.link/checkout/84c55d36-465a-4a8f-9bd0-6b3dae3b992b" class="donation-option">
+                <div class="donation-amount">R$ 70</div>
+                <div class="donation-value">VALE R$ 140,00</div>
+            </a>
+            <a href="https://www.pay-pagamentos.link/checkout/c6a21475-cc6c-45eb-b0c8-c0a6baffc6b0" class="donation-option">
+                <div class="donation-amount">R$ 100</div>
+                <div class="donation-value">VALE R$ 200,00</div>
+            </a>
+            <a href="https://www.pay-pagamentos.link/checkout/6d572550-d3a4-4f7b-b675-b4c62148a567" class="donation-option">
+                <div class="donation-amount">R$ 150</div>
+                <div class="donation-value">VALE R$ 300,00</div>
+            </a>
+            <a href="https://www.pay-pagamentos.link/checkout/63e4c031-9c8c-45b9-8462-d1226b662d16" class="donation-option">
+                <div class="donation-amount">R$ 200</div>
+                <div class="donation-value">VALE R$ 400,00</div>
+            </a>
+            <a href="https://www.pay-pagamentos.link/checkout/14476537-f15a-480b-acd1-a1b35b931107" class="donation-option">
+                <div class="donation-amount">R$ 300</div>
+                <div class="donation-value">VALE R$ 600,00</div>
+            </a>
+            <a href="https://www.pay-pagamentos.link/checkout/e19564b7-4a7e-4555-961b-052b50781762" class="donation-option">
+                <div class="donation-amount">R$ 500</div>
+                <div class="donation-value">VALE R$ 1000,00</div>
+            </a>
+            <a href="https://checkout.geterectus.site/7vJOGYjDyqgKXda" class="donation-option">
+                <div class="donation-amount">R$ 700</div>
+                <div class="donation-value">VALE R$ 1400,00</div>
+            </a>
+            <a href="https://checkout.geterectus.site/yOeXZKYEdqgAQap" class="donation-option">
+                <div class="donation-amount">R$ 1000</div>
+                <div class="donation-value">VALE R$ 2000,00</div>
+            </a>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 Resultados</h2>
+        <div id="results"></div>
+    </div>
+
+    <!-- Scripts necessários -->
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/pix.js"></script>
+    <script src="utm-script.js"></script>
+    
+    <script>
+        function updateStatus() {
+            const status = document.getElementById('status');
+            const urlParams = new URLSearchParams(window.location.search);
+            const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'xcod'];
+            
+            let foundParams = 0;
+            let paramList = '';
+            
+            utmParams.forEach(param => {
+                const value = urlParams.get(param);
+                if (value) {
+                    foundParams++;
+                    paramList += `<li><strong>${param}:</strong> ${value}</li>`;
+                }
+            });
+            
+            if (foundParams > 0) {
+                status.innerHTML = `
+                    <div class="status success">✅ ${foundParams} parâmetros UTM encontrados!</div>
+                    <ul>${paramList}</ul>
+                `;
+            } else {
+                status.innerHTML = `
+                    <div class="status warning">⚠️ Nenhum parâmetro UTM encontrado</div>
+                    <p>Adicione parâmetros UTM à URL para testar o sistema de tracking.</p>
+                `;
+            }
+        }
+
+        function testarProgresso() {
+            const progressBar = document.getElementById('progress-bar');
+            const currentValue = document.getElementById('current-value');
+            
+            // Simular uma doação de R$ 50
+            const valorAtual = 25300;
+            const novaDoacao = 50;
+            const novoValor = valorAtual + novaDoacao;
+            const porcentagem = Math.min(100, (novoValor / 200000) * 100);
+            
+            currentValue.textContent = `R$ ${novoValor.toLocaleString('pt-BR')}`;
+            progressBar.style.width = `${porcentagem}%`;
+            progressBar.textContent = `${Math.round(porcentagem)}%`;
+            
+            // Adicionar animação de pulso
+            progressBar.style.animation = 'pulse 0.5s ease';
+            setTimeout(() => {
+                progressBar.style.animation = '';
+            }, 500);
+        }
+
+        function testarNotificacao() {
+            const nomes = ["Ana Silva", "João Santos", "Maria Oliveira", "Pedro Costa"];
+            const valores = [30, 50, 70, 100];
+            
+            const nome = nomes[Math.floor(Math.random() * nomes.length)];
+            const valor = valores[Math.floor(Math.random() * valores.length)];
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast-test';
+            toast.innerHTML = `
+                <span style="font-size: 24px; margin-right: 12px;">❤️</span>
+                <div><strong>${nome}</strong> acabou de doar <strong>R$ ${valor.toFixed(2)}</strong></div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 4000);
+        }
+
+        function testarNotificacaoDoador() {
+            const toast = document.createElement('div');
+            toast.className = 'toast-test';
+            toast.innerHTML = `
+                <span style="font-size: 24px; margin-right: 12px;">🎉</span>
+                <div><strong>Obrigado pela sua doação de R$ 50,00!</strong> Sua ajuda é preciosa para o Kaleb.</div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 5000);
+        }
+
+        function checkLinks() {
+            setTimeout(() => {
+                const results = document.getElementById('results');
+                const links = document.querySelectorAll('a[href*="checkout.geterectus.site"], a[href*="pay-pagamentos.link"]');
+                
+                let html = '<h3>🔗 Verificação dos Links:</h3>';
+                
+                if (links.length > 0) {
+                    html += `<div class="status info">Encontrados ${links.length} links de checkout</div>`;
+                    html += '<ul>';
+                    links.forEach((link, index) => {
+                        const hasParams = link.href.includes('utm_') || link.href.includes('xcod=');
+                        const statusClass = hasParams ? 'success' : 'error';
+                        const statusIcon = hasParams ? '✅' : '❌';
+                        html += `<li class="status ${statusClass}">${statusIcon} Link ${index + 1}: ${link.href}</li>`;
+                    });
+                    html += '</ul>';
+                } else {
+                    html += '<div class="status error">❌ Nenhum link de checkout encontrado</div>';
+                }
+                
+                // Verifica se o UTMHelper está funcionando
+                if (window.UTMHelper) {
+                    const params = window.UTMHelper.getUTMParams();
+                    if (Object.keys(params).length > 0) {
+                        html += '<div class="status success">✅ UTMHelper funcionando corretamente</div>';
+                    } else {
+                        html += '<div class="status info">ℹ️ UTMHelper carregado, mas sem parâmetros UTM</div>';
+                    }
+                } else {
+                    html += '<div class="status error">❌ UTMHelper não encontrado</div>';
+                }
+
+                // Verifica se o sistema de toast está funcionando
+                if (typeof mostrarNotificacaoDoacao === 'function') {
+                    html += '<div class="status success">✅ Sistema de notificações carregado</div>';
+                } else {
+                    html += '<div class="status error">❌ Sistema de notificações não encontrado</div>';
+                }
+
+                // Verifica se o sistema de PIX está funcionando
+                if (typeof generatePix === 'function') {
+                    html += '<div class="status success">✅ Sistema de PIX carregado</div>';
+                } else {
+                    html += '<div class="status error">❌ Sistema de PIX não encontrado</div>';
+                }
+                
+                results.innerHTML = html;
+            }, 2000);
+        }
+
+        // Adicionar keyframe para animação de pulso
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.02); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus();
+            checkLinks();
+        });
+    </script>
+</body>
+</html> 

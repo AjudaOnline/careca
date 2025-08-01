@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo de Uso - Script UTM</title>
+</head>
+<body>
+    <h1>Exemplo de Uso do Script UTM</h1>
+    
+    <h2>Links de Checkout (serão modificados automaticamente)</h2>
+    <a href="https://checkout.geterectus.site/YEwR3AJYjkZdKyk">Doar R$ 30</a><br>
+    <a href="https://checkout.geterectus.site/4KovG1vklqgyDEm">Doar R$ 50</a><br>
+    <a href="https://checkout.geterectus.site/zj6aGn17y1ZwlK9">Doar R$ 70</a><br>
+    
+    <h2>Exemplo de uso manual</h2>
+    <button onclick="testarUTM()">Testar UTM Manual</button>
+    
+    <h2>Como usar:</h2>
+    <ol>
+        <li>Inclua o script no seu HTML</li>
+        <li>O script automaticamente modificará todos os links que contenham "checkout.geterectus.site"</li>
+        <li>Para uso manual, use: <code>UTMHelper.addUTMToLink('sua-url-aqui')</code></li>
+    </ol>
+    
+    <h2>Exemplo de URL com UTM:</h2>
+    <p>Teste com: <code>https://seusite.com/?utm_source=facebook&utm_medium=cpc&utm_campaign=teste</code></p>
+    
+    <!-- Inclua o script UTM -->
+    <script src="utm-script.js"></script>
+    
+    <script>
+        function testarUTM() {
+            const linkOriginal = 'https://checkout.geterectus.site/YEwR3AJYjkZdKyk';
+            const linkComUTM = UTMHelper.addUTMToLink(linkOriginal);
+            
+            alert('Link original: ' + linkOriginal + '\n\nLink com UTM: ' + linkComUTM);
+            console.log('Parâmetros UTM encontrados:', UTMHelper.getUTMParams());
+        }
+    </script>
+</body>
+</html> 

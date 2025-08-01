@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste UTM - Paula Dantas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .link-test {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+        }
+        .link-test:hover {
+            background: #e9e9e9;
+        }
+        .debug-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .button {
+            background: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:hover {
+            background: #1976D2;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste de Parâmetros UTM</h1>
+    
+    <div class="test-section">
+        <h2>📋 Instruções</h2>
+        <p>Para testar os parâmetros UTM, acesse esta página com parâmetros na URL:</p>
+        <code>teste-utm.html?utm_source=facebook&utm_medium=cpc&utm_campaign=teste&utm_content=banner&utm_term=doacao&xcod=123</code>
+    </div>
+
+    <div class="debug-info">
+        <h3>🔍 Informações de Debug</h3>
+        <div id="debug-info">Carregando...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Links de Teste</h2>
+        <p>Estes links devem ter os parâmetros UTM adicionados automaticamente:</p>
+        
+        <a href="https://www.pay-pagamentos.link/checkout/39bd8e84-0c3d-4917-954f-b35801d8d829" class="link-test">
+            R$ 30 - Teste
+        </a>
+        
+        <a href="https://www.pay-pagamentos.link/checkout/273d559b-cc84-48cc-b3bf-1c28d65e0800" class="link-test">
+            R$ 50 - Teste
+        </a>
+        
+        <a href="https://www.pay-pagamentos.link/checkout/84c55d36-465a-4a8f-9bd0-6b3dae3b992b" class="link-test">
+            R$ 70 - Teste
+        </a>
+        
+        <a href="https://www.pay-pagamentos.link/checkout/c6a21475-cc6c-45eb-b0c8-c0a6baffc6b0" class="link-test">
+            R$ 100 - Teste
+        </a>
+        
+        <a href="https://www.pay-pagamentos.link/checkout/6d572550-d3a4-4f7b-b675-b4c62148a567" class="link-test">
+            R$ 150 - Teste
+        </a>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Testes Manuais</h2>
+        <button class="button" onclick="testUTMParams()">Verificar Parâmetros UTM</button>
+        <button class="button" onclick="testLinkGeneration()">Testar Geração de Links</button>
+        <button class="button" onclick="showAllLinks()">Mostrar Todos os Links</button>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 Resultados</h2>
+        <div id="results"></div>
+    </div>
+
+    <script src="utm-script.js"></script>
+    <script>
+        function updateDebugInfo() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'xcod'];
+            
+            let debugHTML = '<h4>Parâmetros na URL atual:</h4>';
+            let foundParams = false;
+            
+            utmParams.forEach(param => {
+                const value = urlParams.get(param);
+                if (value) {
+                    debugHTML += `<p><strong>${param}:</strong> ${value}</p>`;
+                    foundParams = true;
+                }
+            });
+            
+            if (!foundParams) {
+                debugHTML += '<p>❌ Nenhum parâmetro UTM encontrado na URL</p>';
+            } else {
+                debugHTML += '<p>✅ Parâmetros UTM encontrados!</p>';
+            }
+            
+            document.getElementById('debug-info').innerHTML = debugHTML;
+        }
+
+        function testUTMParams() {
+            const results = document.getElementById('results');
+            const utmHelper = window.UTMHelper;
+            
+            if (utmHelper) {
+                const params = utmHelper.getUTMParams();
+                let html = '<h4>Teste de Parâmetros UTM:</h4>';
+                
+                if (Object.keys(params).length > 0) {
+                    html += '<p>✅ Parâmetros capturados:</p><ul>';
+                    for (const [key, value] of Object.entries(params)) {
+                        html += `<li><strong>${key}:</strong> ${value}</li>`;
+                    }
+                    html += '</ul>';
+                } else {
+                    html += '<p>❌ Nenhum parâmetro UTM encontrado</p>';
+                }
+                
+                results.innerHTML = html;
+            } else {
+                results.innerHTML = '<p>❌ UTMHelper não encontrado</p>';
+            }
+        }
+
+        function testLinkGeneration() {
+            const results = document.getElementById('results');
+            const utmHelper = window.UTMHelper;
+            
+            if (utmHelper) {
+                const testUrl = 'https://www.pay-pagamentos.link/checkout/teste';
+                const enhancedUrl = utmHelper.addUTMToLink(testUrl);
+                
+                let html = '<h4>Teste de Geração de Links:</h4>';
+                html += `<p><strong>URL Original:</strong> ${testUrl}</p>`;
+                html += `<p><strong>URL com UTM:</strong> ${enhancedUrl}</p>`;
+                
+                if (enhancedUrl !== testUrl) {
+                    html += '<p>✅ Link gerado com sucesso!</p>';
+                } else {
+                    html += '<p>❌ Link não foi modificado (sem parâmetros UTM)</p>';
+                }
+                
+                results.innerHTML = html;
+            } else {
+                results.innerHTML = '<p>❌ UTMHelper não encontrado</p>';
+            }
+        }
+
+        function showAllLinks() {
+            const results = document.getElementById('results');
+            const checkoutLinks = document.querySelectorAll('a[href*="pay-pagamentos.link"]');
+            
+            let html = '<h4>Links de Checkout Atuais:</h4>';
+            
+            if (checkoutLinks.length > 0) {
+                html += `<p>Encontrados ${checkoutLinks.length} links:</p><ul>`;
+                checkoutLinks.forEach((link, index) => {
+                    html += `<li><strong>Link ${index + 1}:</strong> ${link.href}</li>`;
+                });
+                html += '</ul>';
+            } else {
+                html += '<p>❌ Nenhum link de checkout encontrado</p>';
+            }
+            
+            results.innerHTML = html;
+        }
+
+        // Atualiza informações de debug quando a página carrega
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDebugInfo();
+            
+            // Aguarda um pouco para o UTM script executar
+            setTimeout(() => {
+                console.log('Página de teste carregada. Verificando links...');
+                showAllLinks();
+            }, 500);
+        });
+    </script>
+</body>
+</html> 

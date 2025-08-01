@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Rápido UTM</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .link {
+            display: block;
+            margin: 10px 0;
+            padding: 15px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        .link:hover {
+            border-color: #2196F3;
+            background: #e3f2fd;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .success { background: #c8e6c9; color: #2e7d32; }
+        .error { background: #ffcdd2; color: #c62828; }
+        .info { background: #e3f2fd; color: #1565c0; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste Rápido - Parâmetros UTM</h1>
+    
+    <div class="test-section">
+        <h2>📋 Como Testar</h2>
+        <p>Adicione parâmetros UTM à URL para testar:</p>
+        <code>teste-rapido.html?utm_source=facebook&utm_medium=cpc&utm_campaign=teste&utm_content=banner&utm_term=doacao&xcod=123</code>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 Status do Sistema</h2>
+        <div id="status">Verificando...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Links de Teste</h2>
+        <p>Estes links devem ter os parâmetros UTM adicionados automaticamente:</p>
+        
+        <a href="https://checkout.geterectus.site/7vJOGYjDyqgKXda" class="link">
+            💳 R$ 700 - Checkout Gerecctus
+        </a>
+        
+        <a href="https://checkout.geterectus.site/yOeXZKYEdqgAQap" class="link">
+            💳 R$ 1000 - Checkout Gerecctus
+        </a>
+        
+        <a href="https://www.pay-pagamentos.link/checkout/39bd8e84-0c3d-4917-954f-b35801d8d829" class="link">
+            💳 R$ 30 - Pay Pagamentos
+        </a>
+        
+        <a href="https://www.pay-pagamentos.link/checkout/273d559b-cc84-48cc-b3bf-1c28d65e0800" class="link">
+            💳 R$ 50 - Pay Pagamentos
+        </a>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 Resultados</h2>
+        <div id="results"></div>
+    </div>
+
+    <script src="utm-script.js"></script>
+    <script>
+        function updateStatus() {
+            const status = document.getElementById('status');
+            const urlParams = new URLSearchParams(window.location.search);
+            const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'xcod'];
+            
+            let foundParams = 0;
+            let paramList = '';
+            
+            utmParams.forEach(param => {
+                const value = urlParams.get(param);
+                if (value) {
+                    foundParams++;
+                    paramList += `<li><strong>${param}:</strong> ${value}</li>`;
+                }
+            });
+            
+            if (foundParams > 0) {
+                status.innerHTML = `
+                    <div class="status success">✅ ${foundParams} parâmetros UTM encontrados!</div>
+                    <ul>${paramList}</ul>
+                `;
+            } else {
+                status.innerHTML = `
+                    <div class="status error">❌ Nenhum parâmetro UTM encontrado</div>
+                    <p>Adicione parâmetros UTM à URL para testar o sistema.</p>
+                `;
+            }
+        }
+
+        function checkLinks() {
+            setTimeout(() => {
+                const results = document.getElementById('results');
+                const links = document.querySelectorAll('a[href*="checkout.geterectus.site"], a[href*="pay-pagamentos.link"]');
+                
+                let html = '<h3>🔗 Verificação dos Links:</h3>';
+                
+                if (links.length > 0) {
+                    html += `<div class="status info">Encontrados ${links.length} links de checkout</div>`;
+                    html += '<ul>';
+                    links.forEach((link, index) => {
+                        const hasParams = link.href.includes('utm_') || link.href.includes('xcod=');
+                        const statusClass = hasParams ? 'success' : 'error';
+                        const statusIcon = hasParams ? '✅' : '❌';
+                        html += `<li class="status ${statusClass}">${statusIcon} Link ${index + 1}: ${link.href}</li>`;
+                    });
+                    html += '</ul>';
+                } else {
+                    html += '<div class="status error">❌ Nenhum link de checkout encontrado</div>';
+                }
+                
+                // Verifica se o UTMHelper está funcionando
+                if (window.UTMHelper) {
+                    const params = window.UTMHelper.getUTMParams();
+                    if (Object.keys(params).length > 0) {
+                        html += '<div class="status success">✅ UTMHelper funcionando corretamente</div>';
+                    } else {
+                        html += '<div class="status info">ℹ️ UTMHelper carregado, mas sem parâmetros UTM</div>';
+                    }
+                } else {
+                    html += '<div class="status error">❌ UTMHelper não encontrado</div>';
+                }
+                
+                results.innerHTML = html;
+            }, 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus();
+            checkLinks();
+        });
+    </script>
+</body>
+</html> 
